@@ -1,5 +1,5 @@
 [Client|host:string;server_port:int|init(self- host- server_port);disconnect(self);run(self);send_payload(self- data);receive_message(self- message)]
-[ClickHandler||handle(self);operation()]
+[ClientHandler|ip:string;port:int;connection:object|handle(self);operation()]
 [MessageParser||init(self);parse(self- payload);parse_error(self- payload);parse_info(self- payload)]
 [MessageReciever(Thread)||init(self- client- connection);run(self)]
 [ThreadedTCPServer(ThreadingMixIn- TCPServer)|allow_reuse_address:bool|]
