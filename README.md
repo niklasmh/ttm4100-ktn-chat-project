@@ -3,13 +3,13 @@ A client/server-system to transfer messages between two locations.
 
 To render UML diagram use [this website](http://yuml.me/diagram/class/draw).
 
-## Progress on part 1
+### Progress on part 1
 - [ ] Class diagrams.
 - [ ] Sequence diagrams for different use cases (e.g. login, send message and logout).
 - [ ] A short textual description of your design.
-- 
 
-## Progress on part 2
+
+### Progress on part 2
 - [ ] You must also demonstrate your chat to one of the student assistants at P15. The deadline for this is
 actually 18.03.2016. Two extra days are given for making small cosmetic changes to the code and
 updating KTN1 (see following points).
