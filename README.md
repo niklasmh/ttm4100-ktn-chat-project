@@ -6,7 +6,7 @@ To render UML diagram use [this website](http://yuml.me/diagram/class/draw).
 ### Progress on part 1
 - [ ] Class diagrams.
 - [x] Sequence diagrams for different use cases (e.g. login, send message and logout).
-- [ ] A short textual description of your design.
+- [x] A short textual description of your design.
 
 
 ### Progress on part 2
