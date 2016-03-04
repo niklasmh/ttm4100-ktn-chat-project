@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import SocketServer
+#files to be used
+#history saved in json object format (or compatible) user, time, message
+
 
 """
 Variables and functions that must be used by all the ClientHandler objects
@@ -27,6 +30,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
             received_string = self.connection.recv(4096)
             
             # TODO: Add handling of received payload from client
+            # her tror vi parser kjøres
 
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
