@@ -1,0 +1,17 @@
+## KTN-1
+
+#### Group nr 52:
+Niklas Molnes Hole, Alexander Wennevold Silva, Mathias Maagerø Svendsen, Andreas Nordby
+
+
+This will be a short textual description of our design. 
+
+_Init_() creates a client and initiates run() which will establish a TCP-connection between the client and the server. Every time a new client connects to the server at new ClientHandler object is created. Now the Client should forever listen to user input and the ClientHandler should forever listen to client requests.
+
+#### Communication with the ClientHandler will happen like this:
+1. User input will be converted into a payload.
+2. send_payload() will encode with JSON and send the payload to the ClientHandler.
+3. The Clienthandler will call the MessageReceiver which will save the payload and call the MessageParser.
+4. The MessageParser will use parse() and decode from JSON to determine if the request is in possible responses.
+5. MessageParser will use parse_???() to convert payload into a String and send it to the Client.
+6. The Client will print the String.
