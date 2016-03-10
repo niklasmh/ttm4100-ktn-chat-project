@@ -28,21 +28,36 @@ class Client:
         # Initiate the connection to the server
         self.connection.connect((self.host, self.server_port))
         print "test"
+        quit = False
+        while quit == False:
+            input = raw_input("Enter command")
+            splitInput =  input.split(" ",1)
+            print splitInput
+            self.connection.send(self.send_payload(splitInput))
+        
     
     '''def disconnect(self):
         # TODO: Handle disconnection
         pass
         '''
-    
+    '''
     def receive_message(self, message):
         print message
         # TODO: Handle incoming message
         pass
     '''
     def send_payload(self, data):
+        req = data[0]
+        content = data[1]
+        payload = {'request': req, 'content':content}
+        payload_as_string = json.dumps(payload)
+        print payload_as_string
+        return payload_as_string                        
+                                 
+        
         # TODO: Handle sending of a payload
-        pass
-    '''
+    
+    
     # More methods may be needed!
 
 
