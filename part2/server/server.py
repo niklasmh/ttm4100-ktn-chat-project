@@ -25,14 +25,13 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         self.ip = self.client_address[0]
         self.port = self.client_address[1]
         self.connection = self.request
-
-        # Loop that listens for messages from the client
+        
         while True:
             received_string = self.connection.recv(4096)
+            
             if len(received_string) > 0:
-                self.send("Koblet")
-            # TODO: Add handling of received payload from client
-            # her tror vi parser kjøres
+                self.connection.send("Koblet: ")
+                self.connection.send(received_string)
 
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
@@ -51,7 +50,7 @@ if __name__ == "__main__":
 
     No alterations are necessary
     """
-    HOST, PORT = 'localhost', 9998
+    HOST, PORT = 'localhost', 9003
     print 'Server running...'
 
     # Set up and initiate the TCP server

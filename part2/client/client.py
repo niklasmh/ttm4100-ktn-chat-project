@@ -10,7 +10,7 @@ class Client:
     This is the chat client class
     """
     host = 'localhost'
-    server_port = 9998
+    server_port = 9003
 
     def __init__(self, host, server_port):
         """
@@ -28,14 +28,36 @@ class Client:
         # Initiate the connection to the server
         self.connection.connect((self.host, self.server_port))
         print "test"
-        quit = False
-        while quit == False:
+        #self.connection.send("melding")
+        
+        input = "initialiserer test"
+        splitInput =  input.split(" ",1)
+        print splitInput
+        self.connection.send(self.send_payload(splitInput))
+        
+        while True:
+            received_string = self.connection.recv(4096)
+            if len(received_string) > 0:
+                print "Mottok1:" + str(received_string)
+                break
+        
+        while True:
+            
             input = raw_input("Enter command")
             splitInput =  input.split(" ",1)
             print splitInput
             self.connection.send(self.send_payload(splitInput))
+            
+            while True:
+                received_string = self.connection.recv(4096)
+                if len(received_string[8:]) > 0:
+                    print "Mottok2:" + str(received_string)
+                    break
+                
         
-    
+            if raw_input("Exit chat?") == "y":
+                break
+
     '''def disconnect(self):
         # TODO: Handle disconnection
         pass
@@ -68,4 +90,4 @@ if __name__ == '__main__':
 
     No alterations are necessary
     """
-    client = Client('localhost', 9998)
+    client = Client('localhost', 9003)
