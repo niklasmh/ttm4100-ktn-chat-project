@@ -6,12 +6,12 @@ class MessageParser():
         self.possible_responses = {
             'error': self.parse_error,
             'info': self.parse_info,
-            'login': self.parse_login, #ting jeg tror skal med herfra og ned
+            'login': self.parse_login, #ting Alex tror skal med herfra og ned
             'logout': self.parse_logout,
             'names': self.parse_names,
             'help': self.parse_help,
-            'history': self_parse_history,
-            'message': self_parse_message
+            'history': self.parse_history,
+            'message': self.parse_message
 	    # More key:values pairs are needed	
         }
 
