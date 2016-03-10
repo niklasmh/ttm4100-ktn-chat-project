@@ -29,7 +29,8 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         # Loop that listens for messages from the client
         while True:
             received_string = self.connection.recv(4096)
-            
+            if len(received_string) > 0:
+                self.send("Koblet")
             # TODO: Add handling of received payload from client
             # her tror vi parser kjøres
 
