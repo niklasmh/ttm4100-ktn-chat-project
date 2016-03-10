@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 import socket
 import json
-from MessageReceiver import MessageReceiver
-from MessageParser import MessageParser
+#from MessageReceiver import MessageReceiver
+#from MessageParser import MessageParser
 
 class Client:
     """
     This is the chat client class
     """
+    host = 'localhost'
+    server_port = 9998
 
     def __init__(self, host, server_port):
         """
@@ -19,24 +21,28 @@ class Client:
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
         # TODO: Finish init process with necessary code
+
         self.run()
 
     def run(self):
         # Initiate the connection to the server
         self.connection.connect((self.host, self.server_port))
+        print "test"
     
-    def disconnect(self):
+    '''def disconnect(self):
         # TODO: Handle disconnection
         pass
+        '''
     
     def receive_message(self, message):
+        print message
         # TODO: Handle incoming message
         pass
-    
+    '''
     def send_payload(self, data):
         # TODO: Handle sending of a payload
         pass
-    
+    '''
     # More methods may be needed!
 
 
