@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 import socket
 import json
-#from MessageReceiver import MessageReceiver
-#from MessageParser import MessageParser
-
+from messageReceiver import MessageReceiver
+from messageParser import MessageParser
+host = "78.91.13.83"
 class Client:
     """
     This is the chat client class
     """
-    host = 'localhost'
-    server_port = 9003
+    host = "78.91.13.83"
+    server_port = 8888
 
     def __init__(self, host, server_port):
         """
@@ -30,16 +30,6 @@ class Client:
         print "test"
         #self.connection.send("melding")
         
-        input = "initialiserer test"
-        splitInput =  input.split(" ",1)
-        print splitInput
-        self.connection.send(self.send_payload(splitInput))
-        
-        while True:
-            received_string = self.connection.recv(4096)
-            if len(received_string) > 0:
-                print "Mottok1:" + str(received_string)
-                break
         
         while True:
             
@@ -51,7 +41,7 @@ class Client:
             while True:
                 received_string = self.connection.recv(4096)
                 if len(received_string[8:]) > 0:
-                    print "Mottok2:" + str(received_string)
+                    print "Mottok:" + str(received_string)
                     break
                 
         
@@ -70,7 +60,10 @@ class Client:
     '''
     def send_payload(self, data):
         req = data[0]
-        content = data[1]
+        if len(data) == 2:
+            content = data[1]
+        else:
+            content = None
         payload = {'request': req, 'content':content}
         payload_as_string = json.dumps(payload)
         print payload_as_string
@@ -90,4 +83,4 @@ if __name__ == '__main__':
 
     No alterations are necessary
     """
-    client = Client('localhost', 9003)
+    client = Client(host, 8888)
