@@ -1,6 +1,6 @@
 ~*
 .idea
-
+*.pyc
 
 *.zip
 *.rar
