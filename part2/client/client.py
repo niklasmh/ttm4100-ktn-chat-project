@@ -4,14 +4,12 @@ import socket
 import json
 from messageReceiver import MessageReceiver
 from messageParser import MessageParser
-host = "78.91.13.83"
-class Client:
-    """
-    This is the chat client class
-    """
-    host = "78.91.13.83"
-    server_port = 8888
 
+host = "78.91.13.83"
+port = 8888;
+
+class Client:
+    
     def __init__(self, host, server_port):
         """
         This method is run when creating a new Client object
@@ -29,7 +27,6 @@ class Client:
         self.connection.connect((self.host, self.server_port))
         print "test"
         #self.connection.send("melding")
-        
         
         while True:
             
@@ -77,10 +74,4 @@ class Client:
 
 
 if __name__ == '__main__':
-    """
-    This is the main method and is executed when you type "python Client.py"
-    in your terminal.
-
-    No alterations are necessary
-    """
-    client = Client(host, 8888)
+    client = Client(host, port)
