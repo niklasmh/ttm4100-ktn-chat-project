@@ -21,23 +21,26 @@ class MessageParser():
         if payload['response'] in self.possible_responses:
             return self.possible_responses[payload['response']](payload)
         else:
-            
+            parse_error(payload)
             # Response not valid
 
+    
+
     def parse_error(self, payload):
-        
+        return payload
     def parse_info(self, payload):
-
-    def parse_login(self, payload);
-
-    def parse_logout(self, payload);
-
-    def parse_names(self);
-
-    def parse_help(self);
-
-    def parse_history(self);
-
-    def parse_message(self, payload);
+        return payload
+    def parse_login(self, payload):
+        return payload
+    def parse_logout(self, payload):
+        return payload
+    def parse_names(self, payload):
+        return payload
+    def parse_help(self, payload):
+        return payload
+    def parse_history(self ,payload):
+        return payload
+    def parse_message(self, payload):
+        return payload
     # Include more methods for handling the different responses... 
 

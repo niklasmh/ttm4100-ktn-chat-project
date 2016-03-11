@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     No alterations are necessary
     """
-    HOST, PORT = 'localhost', 9003
+    HOST, PORT = 'localhost', 9005
     print 'Server running...'
 
     # Set up and initiate the TCP server
