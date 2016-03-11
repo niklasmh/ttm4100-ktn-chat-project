@@ -40,11 +40,7 @@ class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     allow_reuse_address = True
 
 if __name__ == "__main__":
-<<<<<<< Updated upstream
-    HOST, PORT = 'localhost', 8889
-=======
     HOST, PORT = '0.0.0.0', 8888
->>>>>>> Stashed changes
     print 'Server running...'
     
     # Set up and initiate the TCP server
