@@ -5,8 +5,8 @@ import json
 from messageReceiver import MessageReceiver
 from messageParser import MessageParser
 
-host = "localhost"
-port = 8889;
+host = "78.91.13.83"
+port = 8888;
 
 class Client:
     
@@ -14,20 +14,20 @@ class Client:
         """
         This method is run when creating a new Client object
         """
-
+        
         # Set up the socket connection to the server
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = host
         self.server_port = port
         # TODO: Finish init process with necessary code
-
+        
         self.run()
-
+    
     def run(self):
         # Initiate the connection to the server
+        print "Kobler til server..."
         self.connection.connect((self.host, self.server_port))
-        print "test"
-        #self.connection.send("melding")
+        print "Kobling suksessfull"
         
         while True:
             
