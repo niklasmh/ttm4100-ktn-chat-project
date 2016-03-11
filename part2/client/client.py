@@ -33,7 +33,7 @@ class Client:
         
         while True:
             
-            input = raw_input("Enter command")
+            input = raw_input("Enter command: \n>> ")
             splitInput =  input.split(" ",1)
             print splitInput
             self.connection.send(self.send_payload(splitInput))
@@ -45,7 +45,7 @@ class Client:
                     break
                 
         
-            if raw_input("Exit chat?") == "y":
+            if raw_input("Exit chat? (y/n) \n>> ") == "y":
                 break
 
     '''def disconnect(self):
