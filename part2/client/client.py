@@ -42,7 +42,7 @@ class Client:
                     print "Mottok:" + str(received_string)
                     break
                 
-        
+            
             if raw_input("Exit chat? (y/n) \n>> ") == "y":
                 break
 
@@ -65,8 +65,8 @@ class Client:
         payload = {'request': req, 'content':content}
         payload_as_string = json.dumps(payload)
         print payload_as_string
-        return payload_as_string                        
-                                 
+        return payload_as_string
+        
         
         # TODO: Handle sending of a payload
     

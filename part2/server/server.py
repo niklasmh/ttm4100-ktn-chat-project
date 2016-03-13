@@ -1,6 +1,7 @@
 #!Python27
 # -*- coding: utf-8 -*-
 import SocketServer
+import json
 #files to be used
 #history saved in json object format (or compatible) user, time, message
 
@@ -31,8 +32,10 @@ class ClientHandler(SocketServer.BaseRequestHandler):
             
             if len(received_string) > 0:
                 self.connection.send("ip: " + self.ip + " - " + received_string)
+                received_object = json.decode(received_string);
                 print "Message from: " + self.ip
-                print "Message: " + received_string
+                print "Request: " + received_string.request
+                print "Message: " + received_string.content
                 print "\n"
 
 
