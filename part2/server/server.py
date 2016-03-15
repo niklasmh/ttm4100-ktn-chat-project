@@ -5,6 +5,8 @@ import json
 #files to be used
 #history saved in json object format (or compatible) user, time, message
 
+HOST, PORT = '0.0.0.0', 8888
+
 class ClientHandler(SocketServer.BaseRequestHandler):
 
     def handle(self):
@@ -32,9 +34,6 @@ class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     allow_reuse_address = True
 
 if __name__ == "__main__":
-    HOST, PORT = '0.0.0.0', 8888
     print 'Server running...'
-    
-    # Set up and initiate the TCP server
     server = ThreadedTCPServer((HOST, PORT), ClientHandler)
     server.serve_forever()
