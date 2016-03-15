@@ -15,13 +15,8 @@ class Client:
     def __init__(self, host, server_port):
         self.host = host
         self.server_port = port
-        
-        # Set up the socket connection to the server
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
-        print self.connection
-        
-        # TODO: Finish init process with necessary code
         print "Kobler til server..."
         self.connection.connect((self.host, self.server_port))
         print "Kobling suksessfull"
@@ -40,22 +35,22 @@ class Client:
         print "Starting receiverThread..."
         self.start(self.host, self.server_port)
         print "receiverThread created!\nTrying to recieve some information from the databases at Pentagon and NASA..."
-        sleep(.5)
+        sleep(.3)
         print "."
-        sleep(.5)
+        sleep(.3)
         print ".."
-        sleep(.5)
+        sleep(.3)
         print "..."
-        sleep(.5)
-        print "Done!"
+        sleep(.3)
         print "Information received. Success!"
         print "Initializing a new chat session..."
         
         while True:
             input = raw_input("Enter command: \n>> ")
             splitInput = input.split(" ", 1)
-            print splitInput
-            self.connection.send(self.send_payload(splitInput))
+            jsonFormat = self.send_payload(splitInput)
+            print jsonFormat
+            self.connection.send(jsonFormat)
     
     def disconnect(self):
         self.connection.close()
@@ -63,28 +58,16 @@ class Client:
     
     def receive_message(self, message):
         print message
-        # TODO: Handle incoming message
-        pass
     
     def send_payload(self, data):
         req = data[0]
-        
-        if len(data) == 2:
-            content = data[1]
-        else:
-            content = None
+        content = data[1] if len(data) > 1 else None
         
         payload = { 'request': req, 'content': content }
         payload_as_string = json.dumps(payload)
         print payload_as_string
         
         return payload_as_string
-        
-        # TODO: Handle sending of a payload
-    
-    
-    # More methods may be needed!
-
 
 if __name__ == '__main__':
     client = Client(host, port)

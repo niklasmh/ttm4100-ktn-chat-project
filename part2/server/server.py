@@ -16,8 +16,12 @@ class ClientHandler(SocketServer.BaseRequestHandler):
             received_string = self.connection.recv(4096)
             
             if received_string:
-                self.connection.send("ip: " + self.ip + " - " + received_string)
+                self.connection.send("ip: "
+                                     + self.ip
+                                     + " - "
+                                     + received_string)
                 received_object = json.decode(received_string);
+                
                 print "Message from: " + self.ip
                 print "Request: " + received_string.request
                 print "Message: " + received_string.content
