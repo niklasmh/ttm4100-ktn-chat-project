@@ -6,8 +6,8 @@ from time import sleep
 from messageReceiver import MessageReceiver
 from messageParser import MessageParser
 
-host = "123.456.0.789"
-port = 8888;
+HOST = "123.456.0.789"
+PORT = 8888;
 from connectionInfo import *
 
 class Client:
@@ -70,4 +70,4 @@ class Client:
         return payload_as_string
 
 if __name__ == '__main__':
-    client = Client(host, port)
+    client = Client(HOST, PORT)
