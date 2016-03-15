@@ -5,24 +5,9 @@ import json
 #files to be used
 #history saved in json object format (or compatible) user, time, message
 
-
-"""
-Variables and functions that must be used by all the ClientHandler objects
-must be written here (e.g. a dictionary for connected clients)
-"""
-
 class ClientHandler(SocketServer.BaseRequestHandler):
-    """
-    This is the ClientHandler class. Everytime a new client connects to the
-    server, a new ClientHandler object will be created. This class represents
-    only connected clients, and not the server itself. If you want to write
-    logic for the server, you must write it outside this class
-    """
 
     def handle(self):
-        """
-        This method handles the connection between a client and the server.
-        """
         self.ip = self.client_address[0]
         self.port = self.client_address[1]
         self.connection = self.request
@@ -30,7 +15,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         while True:
             received_string = self.connection.recv(4096)
             
-            if len(received_string) > 0:
+            if received_string:
                 self.connection.send("ip: " + self.ip + " - " + received_string)
                 received_object = json.decode(received_string);
                 print "Message from: " + self.ip

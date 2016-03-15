@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import socket
 import json
+from time import sleep
 from messageReceiver import MessageReceiver
 from messageParser import MessageParser
 
@@ -11,15 +12,13 @@ port = 8888;
 class Client:
     
     def __init__(self, host, server_port):
-        """
-        This method is run when creating a new Client object
-        """
-        
         self.host = host
         self.server_port = port
         
         # Set up the socket connection to the server
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        
+        print self.connection
         
         # TODO: Finish init process with necessary code
         print "Kobler til server..."
@@ -29,39 +28,37 @@ class Client:
         print "Kjører i gang..."
         self.run()
         print "Ferdig med run"
-        
+    
     def start(self, host, server_port):
         recieverThread = MessageReceiver(self, self.connection)
+        recieverThread.daemon = True
         recieverThread.start()
+        print "Thread name: ", recieverThread.name
     
     def run(self):
-        # Initiate the connection to the server
         print "Starting receiverThread..."
         self.start(self.host, self.server_port)
-        print "receiverThread created!"
+        print "receiverThread created!\nTrying to recieve some information from the databases at Pentagon and NASA..."
+        sleep(.5)
+        print "."
+        sleep(.5)
+        print ".."
+        sleep(.5)
+        print "..."
+        sleep(.5)
+        print "Done!"
+        print "Information received. Success!"
+        print "Initializing a new chat session..."
         
         while True:
-            
             input = raw_input("Enter command: \n>> ")
             splitInput = input.split(" ", 1)
             print splitInput
             self.connection.send(self.send_payload(splitInput))
-            
-            while True:
-                received_string = self.connection.recv(4096)
-                
-                if len(received_string[8:]) > 0:
-                    print "Mottok:" + str(received_string)
-                    break
-                
-            
-            if raw_input("Exit chat? (y/n) \n>> ") == "y":
-                break
-
-    '''def disconnect(self):
-        # TODO: Handle disconnection
-        pass
-    '''
+    
+    def disconnect(self):
+        self.connection.close()
+        print "Connection closed"
     
     def receive_message(self, message):
         print message
