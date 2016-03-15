@@ -5,7 +5,7 @@ import json
 from messageReceiver import MessageReceiver
 from messageParser import MessageParser
 
-host = "78.91.13.83"
+host = "192.168.0.193"
 port = 8888;
 
 class Client:
@@ -15,29 +15,41 @@ class Client:
         This method is run when creating a new Client object
         """
         
-        # Set up the socket connection to the server
-        self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = host
         self.server_port = port
-        # TODO: Finish init process with necessary code
         
-        self.run()
-    
-    def run(self):
-        # Initiate the connection to the server
+        # Set up the socket connection to the server
+        self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        
+        # TODO: Finish init process with necessary code
         print "Kobler til server..."
         self.connection.connect((self.host, self.server_port))
         print "Kobling suksessfull"
         
+        print "Kjører i gang..."
+        self.run()
+        print "Ferdig med run"
+        
+    def start(self, host, server_port):
+        recieverThread = MessageReceiver(self, self.connection)
+        recieverThread.start()
+    
+    def run(self):
+        # Initiate the connection to the server
+        print "Starting receiverThread..."
+        self.start(self.host, self.server_port)
+        print "receiverThread created!"
+        
         while True:
             
             input = raw_input("Enter command: \n>> ")
-            splitInput =  input.split(" ",1)
+            splitInput = input.split(" ", 1)
             print splitInput
             self.connection.send(self.send_payload(splitInput))
             
             while True:
                 received_string = self.connection.recv(4096)
+                
                 if len(received_string[8:]) > 0:
                     print "Mottok:" + str(received_string)
                     break
@@ -49,24 +61,26 @@ class Client:
     '''def disconnect(self):
         # TODO: Handle disconnection
         pass
-        '''
     '''
+    
     def receive_message(self, message):
         print message
         # TODO: Handle incoming message
         pass
-    '''
+    
     def send_payload(self, data):
         req = data[0]
+        
         if len(data) == 2:
             content = data[1]
         else:
             content = None
-        payload = {'request': req, 'content':content}
+        
+        payload = { 'request': req, 'content': content }
         payload_as_string = json.dumps(payload)
         print payload_as_string
-        return payload_as_string
         
+        return payload_as_string
         
         # TODO: Handle sending of a payload
     
