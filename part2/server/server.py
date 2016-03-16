@@ -3,6 +3,7 @@
 import SocketServer
 import json
 import sys
+import re
 #files to be used
 #history saved in json object format (or compatible) user, time, message
 
@@ -31,17 +32,27 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                 content = received_object['content'] or ""
                 
                 if self.client in clients:
-                    for c in clients:
-                        if c[0] != self:
-                            c[0].connection.send("Melding fra " + self.client[1])
                     
-                    print "Message from: " + self.ip
-                    print "Request: " + request
-                    print "Message: " + content
-                    print "\n"
-                    
-                    if request == "logout":
+                    if re.search(r'^bye$|^exit$|^logout$', request, re.I):
+                        self.client[0].connection.send("Du ble logget ut")
                         clients.remove(self.client)
+                    elif re.search(r'^log$|^history$|^historie$', request, re.I):
+                        self.client[0].connection.send("Her skal det være historie")
+                    elif re.search(r'^\?$|^help$', request, re.I):
+                        self.client[0].connection.send("Her skal det være hjelp!!")
+                    else:
+                        msg = ""
+                        
+                        if not re.search(r'^msg|^message', request, re.I):
+                            msg += request + " "
+                        
+                        msg += content
+                        for c in clients:
+                            if c[0] != self:
+                                c[0].connection.send("Melding fra "
+                                                     + self.client[1] 
+                                                     + ": "
+                                                     + msg)
                 else:
                     if request == "login":
                         self.client = (self, content or "")

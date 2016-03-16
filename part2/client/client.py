@@ -3,6 +3,7 @@
 import socket
 import json
 import sys
+import re
 from time import sleep
 from messageReceiver import MessageReceiver
 from messageParser import MessageParser
@@ -29,7 +30,6 @@ class Client:
     def start(self, host, server_port):
         recieverThread = MessageReceiver(self, self.connection)
         recieverThread.start()
-        print "Thread name: ", recieverThread.name
     
     def run(self):
         print "Starting receiverThread..."
@@ -45,19 +45,29 @@ class Client:
         print "Information received. Success!"
         print "Initializing a new chat session..."
         
-        while True:
-            input = raw_input("Enter command: \n>> ")
+        while 1:
+            input = raw_input("\nEnter command: \n>> ")
             splitInput = input.split(" ", 1)
             jsonFormat = self.send_payload(splitInput)
-            print jsonFormat
             self.connection.send(jsonFormat)
+            sleep(.1)
+            
+            if re.search(r'^bye$|^exit$|^logout$', splitInput[0], re.I):
+                self.disconnect()
+                
+                if re.search(r'^bye$|^exit$', splitInput[0], re.I):
+                    self.quit()
     
     def disconnect(self):
         self.connection.close()
         print "Connection closed"
     
+    def quit(self):
+        print "Bye"
+        exit()
+    
     def receive_message(self, message):
-        print "Server: " + message
+        print "\nServer: " + message + "\n>> ",
     
     def send_payload(self, data):
         req = data[0]
