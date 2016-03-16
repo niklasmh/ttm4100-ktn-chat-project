@@ -4,11 +4,13 @@ import SocketServer
 import json
 import sys
 import re
-#files to be used
-#history saved in json object format (or compatible) user, time, message
 
 # To save clients
 clients = set()
+
+# To save history
+history = {}
+history = json.loads("log.txt")
 
 HOST, PORT = '0.0.0.0', 8888
 
@@ -61,6 +63,9 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                         for c in clients:
                             if c[0] != self:
                                 c[0].connection.send("Bruker: " + self.client[1] + " logget inn")
+    
+    def addToLog(msg, clientname):
+        
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     allow_reuse_address = True
