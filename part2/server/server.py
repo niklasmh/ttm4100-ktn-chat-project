@@ -31,7 +31,7 @@ def output_format_string(name, content, response="message"):
                 'name': name or 'Server',
                 'response': response,
                 'content' : content or ''
-            })
+            }, indent=4, sort_keys=True)
 
 def add_log(name, content, response="message"):
     history.append(output_format(name, content, response))
