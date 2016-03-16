@@ -2,49 +2,81 @@
 # -*- coding: utf-8 -*-
 import socket
 import json
-from MessageReceiver import MessageReceiver
-from MessageParser import MessageParser
+import sys
+import re
+from time import sleep
+from messageReceiver import MessageReceiver
+from messageParser import MessageParser
+
+HOST = "123.456.0.789"
+PORT = 8888;
+from connectionInfo import *
 
 class Client:
-    """
-    This is the chat client class
-    """
-
+    
     def __init__(self, host, server_port):
-        """
-        This method is run when creating a new Client object
-        """
-
-        # Set up the socket connection to the server
+        self.host = host
+        self.server_port = server_port
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
-        # TODO: Finish init process with necessary code
-        self.run()
-
-    def run(self):
-        # Initiate the connection to the server
+        print "Kobler til server..."
         self.connection.connect((self.host, self.server_port))
+        print "Kobling suksessfull"
+        
+        print "Kjører i gang..."
+        self.run()
+        print "Ferdig med run"
+    
+    def start(self, host, server_port):
+        recieverThread = MessageReceiver(self, self.connection)
+        recieverThread.start()
+    
+    def run(self):
+        print "Starting receiverThread..."
+        self.start(self.host, self.server_port)
+        print "receiverThread created!\nTrying to recieve some information from the databases at Pentagon and NASA..."
+        sleep(.1)
+        print "."
+        sleep(.1)
+        print ".."
+        sleep(.1)
+        print "..."
+        sleep(.1)
+        print "Information received. Success!"
+        print "Initializing a new chat session..."
+        
+        while 1:
+            input = raw_input("\nEnter command: \n>> ")
+            splitInput = input.split(" ", 1)
+            jsonFormat = self.send_payload(splitInput)
+            self.connection.send(jsonFormat)
+            sleep(.1)
+            
+            if re.search(r'^bye$|^exit$|^logout$', splitInput[0], re.I):
+                self.disconnect()
+                
+                if re.search(r'^bye$|^exit$', splitInput[0], re.I):
+                    self.quit()
     
     def disconnect(self):
-        # TODO: Handle disconnection
-        pass
+        self.connection.close()
+        print "Connection closed"
+    
+    def quit(self):
+        print "Bye"
+        exit()
     
     def receive_message(self, message):
-        # TODO: Handle incoming message
-        pass
+        print "\nServer: " + message + "\n>> ",
     
     def send_payload(self, data):
-        # TODO: Handle sending of a payload
-        pass
-    
-    # More methods may be needed!
-
+        req = data[0]
+        content = data[1] if len(data) > 1 else None
+        
+        payload = { 'request': req, 'content': content }
+        payload_as_string = json.dumps(payload)
+        
+        return payload_as_string
 
 if __name__ == '__main__':
-    """
-    This is the main method and is executed when you type "python Client.py"
-    in your terminal.
-
-    No alterations are necessary
-    """
-    client = Client('localhost', 9998)
+    client = Client(HOST, int(sys.argv[1] if len(sys.argv) > 1 else PORT))
