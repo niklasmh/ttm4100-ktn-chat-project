@@ -41,7 +41,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                     elif re.search(r'^log$|^history$|^historie$', request, re.I):
                         self.client[0].connection.send("Her skal det være historie")
                     elif re.search(r'^\?$|^help$', request, re.I):
-                        self.client[0].connection.send("Her skal det være hjelp!!")
+                        self.client[0].connection.send("Hjelp:\n history/historie/log - Her får du opp historien.\n bye/exit/logout - Du vil bli logget ut.\n msg/message/'' - Dette vil sende en melding til alle andre som er logget på serveren.")
                     else:
                         msg = ""
                         
