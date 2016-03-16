@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import socket
 import json
+import sys
 from time import sleep
 from messageReceiver import MessageReceiver
 from messageParser import MessageParser
@@ -14,7 +15,7 @@ class Client:
     
     def __init__(self, host, server_port):
         self.host = host
-        self.server_port = port
+        self.server_port = server_port
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
         print "Kobler til server..."
@@ -27,7 +28,6 @@ class Client:
     
     def start(self, host, server_port):
         recieverThread = MessageReceiver(self, self.connection)
-        recieverThread.daemon = True
         recieverThread.start()
         print "Thread name: ", recieverThread.name
     
@@ -35,13 +35,13 @@ class Client:
         print "Starting receiverThread..."
         self.start(self.host, self.server_port)
         print "receiverThread created!\nTrying to recieve some information from the databases at Pentagon and NASA..."
-        sleep(.3)
+        sleep(.1)
         print "."
-        sleep(.3)
+        sleep(.1)
         print ".."
-        sleep(.3)
+        sleep(.1)
         print "..."
-        sleep(.3)
+        sleep(.1)
         print "Information received. Success!"
         print "Initializing a new chat session..."
         
@@ -57,7 +57,7 @@ class Client:
         print "Connection closed"
     
     def receive_message(self, message):
-        print message
+        print "Server: " + message
     
     def send_payload(self, data):
         req = data[0]
@@ -65,9 +65,8 @@ class Client:
         
         payload = { 'request': req, 'content': content }
         payload_as_string = json.dumps(payload)
-        print payload_as_string
         
         return payload_as_string
 
 if __name__ == '__main__':
-    client = Client(HOST, PORT)
+    client = Client(HOST, int(sys.argv[1] if len(sys.argv) > 1 else PORT))
