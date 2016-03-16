@@ -6,15 +6,25 @@ import sys
 import re
 import random
 
-
 # To save clients
 clients = set()
 
 # To save history
-history = {}
-history = json.loads("log.txt")
+history = {
+    "id": 10,
+    "name": "noen"
+}
+#history = open('log.json', 'r').read()
+print history
+#print json.load('log.json')
 
 HOST, PORT = '0.0.0.0', 8888
+
+def fix_string(name):
+    return re.sub(r'[^a-z0-9A-Z ]', '', name)
+
+def fix_word(name):
+    return re.sub(r'[^a-z0-9A-Z]', '', name)
 
 class ClientHandler(SocketServer.BaseRequestHandler):
 
@@ -36,15 +46,21 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                 request = received_object['request'] or ""
                 content = received_object['content'] or ""
                 
-                if self.client in clients:
+                if re.search(r'^\?$|^help$', request, re.I):
+                        self.client[0].connection.send("Hjelp:\n history/historie/log - Her får du opp historien.\n bye/exit/logout - Du vil bli logget ut.\n msg/message/'' - Dette vil sende en melding til alle andre som er logget på serveren.")
+                elif self.client in clients:
                     
                     if re.search(r'^bye$|^exit$|^logout$', request, re.I):
                         self.client[0].connection.send("Du ble logget ut")
                         clients.remove(self.client)
+                        
+                        for c in clients:
+                            
+                            if c[0] != self:
+                                c[0].connection.send(self.client[1] + ": ble logget ut")
+                        
                     elif re.search(r'^log$|^history$|^historie$', request, re.I):
                         self.client[0].connection.send("Her skal det være historie")
-                    elif re.search(r'^\?$|^help$', request, re.I):
-                        self.client[0].connection.send("Hjelp:\n history/historie/log - Her får du opp historien.\n bye/exit/logout - Du vil bli logget ut.\n msg/message/'' - Dette vil sende en melding til alle andre som er logget på serveren.")
                     else:
                         msg = ""
                         
@@ -54,24 +70,22 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                         msg += content
                         for c in clients:
                             if c[0] != self:
-                                c[0].connection.send("Melding fra "
-                                                     + self.client[1] 
-                                                     + ": "
-                                                     + msg)
+                                c[0].connection.send(self.client[1] + ": " + msg + "\n>> ")
                 else:
                     if request == "login":
+                        
                         if content:
-                            content = re.sub(r'[^a-z0-9]', '', content)
-                        self.client = (self, content or "Guest" + random.randrange(1000, 9999, 1))
+                            content = fix_string(content)
+                        
+                        self.client = (self, content or "Guest" + str(random.randrange(1000, 9999, 1)))
                         clients.add(self.client)
                         
                         for c in clients:
                             if c[0] != self:
-                                c[0].connection.send("Bruker: " + self.client[1] + " logget inn")
+                                c[0].connection.send(self.client[1] + ": logget inn\n>> ")
     
     def addToLog(msg, clientname):
         pass
-
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     allow_reuse_address = True

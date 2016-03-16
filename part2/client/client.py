@@ -12,6 +12,9 @@ HOST = "123.456.0.789"
 PORT = 8888;
 from connectionInfo import *
 
+def fix_string(name):
+    return re.sub(r'[^a-z0-9A-Z ]', '', name)
+
 class Client:
     
     def __init__(self, host, server_port):
@@ -46,17 +49,17 @@ class Client:
         print "Initializing a new chat session..."
         
         while 1:
-            input = raw_input("\nEnter command: \n>> ")
+            input = fix_string(raw_input("\nEnter command: \n>> "))
             splitInput = input.split(" ", 1)
             jsonFormat = self.send_payload(splitInput)
             self.connection.send(jsonFormat)
             sleep(.1)
             
             if re.search(r'^bye$|^exit$|^logout$', splitInput[0], re.I):
-                self.disconnect()
                 
                 if re.search(r'^bye$|^exit$', splitInput[0], re.I):
                     self.quit()
+                    self.disconnect()
     
     def disconnect(self):
         self.connection.close()
@@ -67,7 +70,7 @@ class Client:
         exit()
     
     def receive_message(self, message):
-        print "\nServer: " + message + "\n>> ",
+        print "\n" + message + "\n>> ",
     
     def send_payload(self, data):
         req = data[0]
