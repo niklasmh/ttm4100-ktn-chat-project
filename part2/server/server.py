@@ -12,23 +12,27 @@ from datetime import datetime
 clients = set()
 
 # To save history
-history = {
-    "id": 10,
-    "name": "noen"
-}
-#history = open('log.json', 'r').read()
-print history
-#print json.load('log.json')
+history = []
+history = json.loads(open('log.json', 'r').read())
 
 HOST, PORT = '0.0.0.0', 8888
 
-def output_format(name, content, response = "message"):
-    return history.append(json.dumps({
-                'timestamp': datetime.now().strftime("%m/%d - %H:%M:%S")
-                'name': name or 'Server'
-                'response': response
+def output_format(name, content, response="message"):
+    return {
+                'timestamp': datetime.now().strftime("%m/%d - %H:%M:%S"),
+                'name': name or 'Server',
+                'response': response,
                 'content' : content or ''
-            }))
+            }
+
+def add_log(name, content, response="message"):
+    history.append(output_format(name, content, response))
+    
+    with open('log.json', 'w') as f:
+         json.dump(history, f)
+
+def get_log():
+    return json.dumps(json.loads(open('log.json', 'r').read()), indent=4, sort_keys=True)
 
 def fix_string(name):
     return re.sub(r'[^a-z0-9A-Z ]', '', name)
@@ -70,7 +74,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                                 c[0].connection.send(self.client[1] + ": ble logget ut")
                         
                     elif re.search(r'^log$|^history$|^historie$', request, re.I):
-                        self.client[0].connection.send("Her skal det være historie")
+                        self.client[0].connection.send(get_log())
                     else:
                         msg = ""
                         
@@ -81,6 +85,8 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                         for c in clients:
                             if c[0] != self:
                                 c[0].connection.send(self.client[1] + ": " + msg + "\n>> ")
+                        
+                        add_log(self.client[1], msg)
                 else:
                     if request == "login":
                         
@@ -93,9 +99,6 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                         for c in clients:
                             if c[0] != self:
                                 c[0].connection.send(self.client[1] + ": logget inn\n>> ")
-    
-    def addToLog(msg, clientname):
-        pass
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     allow_reuse_address = True
