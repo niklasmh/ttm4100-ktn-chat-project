@@ -17,9 +17,7 @@ class ClientHandler(SocketServer.BaseRequestHandler):
         self.ip = self.client_address[0]
         self.port = self.client_address[1]
         self.connection = self.request
-        
-        # Adding client to list
-        clients.add(self)
+        self.client = (self, "")
         
         while True:
             received_string = self.connection.recv(4096)
@@ -32,18 +30,26 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                 request = received_object['request'] or ""
                 content = received_object['content'] or ""
                 
-                for c in clients:
-                    c.connection.send("ip: "
-                                     + self.ip
-                                     + ", req: "
-                                     + request
-                                     + ", con: "
-                                     + content)
-                
-                print "Message from: " + self.ip
-                print "Request: " + request
-                print "Message: " + content
-                print "\n"
+                if self.client in clients:
+                    for c in clients:
+                        if c[0] != self:
+                            c[0].connection.send("Melding fra " + self.client[1])
+                    
+                    print "Message from: " + self.ip
+                    print "Request: " + request
+                    print "Message: " + content
+                    print "\n"
+                    
+                    if request == "logout":
+                        clients.remove(self.client)
+                else:
+                    if request == "login":
+                        self.client = (self, content or "")
+                        clients.add(self.client)
+                        
+                        for c in clients:
+                            if c[0] != self:
+                                c[0].connection.send("Bruker: " + self.client[1] + " logget inn")
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     allow_reuse_address = True
