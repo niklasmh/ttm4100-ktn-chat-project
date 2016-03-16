@@ -1,2 +1,2 @@
-host = "the server ipv4"
-port = 8888;
+HOST = "the server ipv4"
+PORT = 8888;
