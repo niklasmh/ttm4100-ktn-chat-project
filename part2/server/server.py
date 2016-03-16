@@ -5,6 +5,8 @@ import json
 import sys
 import re
 import random
+import time
+from datetime import datetime
 
 # To save clients
 clients = set()
@@ -19,6 +21,14 @@ print history
 #print json.load('log.json')
 
 HOST, PORT = '0.0.0.0', 8888
+
+def output_format(name, content, response = "message"):
+    return history.append(json.dumps({
+                'timestamp': datetime.now().strftime("%m/%d - %H:%M:%S")
+                'name': name or 'Server'
+                'response': response
+                'content' : content or ''
+            }))
 
 def fix_string(name):
     return re.sub(r'[^a-z0-9A-Z ]', '', name)
