@@ -25,6 +25,14 @@ def output_format(name, content, response="message"):
                 'content' : content or ''
             }
 
+def output_format_string(name, content, response="message"):
+    return json.dumps({
+                'timestamp': datetime.now().strftime("%m/%d - %H:%M:%S"),
+                'name': name or 'Server',
+                'response': response,
+                'content' : content or ''
+            })
+
 def add_log(name, content, response="message"):
     history.append(output_format(name, content, response))
     
@@ -61,11 +69,11 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                 content = received_object['content'] or ""
                 
                 if re.search(r'^\?$|^help$', request, re.I):
-                        self.client[0].connection.send("Hjelp:\n history/historie/log - Her får du opp historien.\n bye/exit/logout - Du vil bli logget ut.\n msg/message/'' - Dette vil sende en melding til alle andre som er logget på serveren.")
+                        self.client[0].connection.send(output_format_string(self.client[1], "Hjelp:\n history/historie/log - Her får du opp historien.\n bye/exit/logout - Du vil bli logget ut.\n msg/message/'' - Dette vil sende en melding til alle andre som er logget på serveren.", "history"))
                 elif self.client in clients:
                     
                     if re.search(r'^bye$|^exit$|^logout$', request, re.I):
-                        self.client[0].connection.send("Du ble logget ut")
+                        self.client[0].connection.send(output_format_string(self.client[1], "Du ble logget ut", "logout"))
                         clients.remove(self.client)
                         
                         for c in clients:
@@ -75,6 +83,8 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                         
                     elif re.search(r'^log$|^history$|^historie$', request, re.I):
                         self.client[0].connection.send(get_log())
+                    elif re.search(r'^names$|^navn$', request, re.I):
+                        self.client[0].connection.send(output_format_string(self.client[1], "Navn: " + ", ".join([i[1] for i in clients]), "names"))
                     else:
                         msg = ""
                         
@@ -93,12 +103,21 @@ class ClientHandler(SocketServer.BaseRequestHandler):
                         if content:
                             content = fix_string(content)
                         
-                        self.client = (self, content or "Guest" + str(random.randrange(1000, 9999, 1)))
-                        clients.add(self.client)
+                        taken = False
+                        for i in clients:
+                            if i[1] == content:
+                                taken = True
                         
-                        for c in clients:
-                            if c[0] != self:
-                                c[0].connection.send(self.client[1] + ": logget inn\n>> ")
+                        if taken:
+                            self.client[0].connection.send(output_format_string(self.client[1], "Brukernavn tatt", "error"))
+                        else:
+                            self.client[0].connection.send(output_format_string(self.client[1], "Du ble logget inn", "login"))
+                            self.client = (self, content or "Guest" + str(random.randrange(1000, 9999, 1)))
+                            clients.add(self.client)
+                                                       
+                            for c in clients:
+                                if c[0] != self:
+                                    c[0].connection.send(self.client[1] + ": logget inn\n>> ")
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     allow_reuse_address = True

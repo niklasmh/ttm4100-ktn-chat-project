@@ -5,7 +5,6 @@ class MessageParser():
     def __init__(self):
         self.possible_responses = {
             'error': self.parse_error,
-            'info': self.parse_info,
             'login': self.parse_login,
             'logout': self.parse_logout,
             'names': self.parse_names,
