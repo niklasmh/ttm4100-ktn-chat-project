@@ -13,7 +13,6 @@ class MessageReceiver(Thread):
     def run(self):
         # TODO: Make MessageReceiver receive and handle payloads
         while True:
-            content = self.connection.recv(4096).decode("UTF-8")
-            
+            content = self.connection.recv(4096)
             if content:
-                self.listener.receive_message(content)
+                    self.listener.receive_message(content)

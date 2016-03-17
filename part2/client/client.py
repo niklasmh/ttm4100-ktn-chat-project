@@ -22,6 +22,8 @@ class Client:
         self.server_port = server_port
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
+        self.message_parser = MessageParser()
+        
         print "Kobler til server..."
         self.connection.connect((self.host, self.server_port))
         print "Kobling suksessfull"
@@ -70,7 +72,14 @@ class Client:
         exit()
     
     def receive_message(self, message):
-        print "\n" + message + "\n>> ",
+        print "\n",
+        #print message
+        try:
+            self.message_parser.parse(json.loads(message))
+        except ValueError:
+            print message
+            
+        print "\n>> ",
     
     def send_payload(self, data):
         req = data[0]
